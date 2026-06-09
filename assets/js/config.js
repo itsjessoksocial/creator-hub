@@ -4,9 +4,9 @@ window.HUB_CONFIG = {
   API_BASE: "https://creator-hub-api-git-main-itsjessok-s-projects.vercel.app/api/notion",
 
   DB: {
-    PRODUCTS:    "37af37fb725c80688b49f398174ea524",
-    TODOS:       "37af37fb725c80488646d712b6578c11",
-    HOOKS:       "37af37fb725c8043bc8bfd6a27e62f05",
+    PRODUCTS:    "37af37fb-725c-8068-8b49-f398174ea524",
+    TODOS:       "37af37fb-725c-8048-8646-d712b6578c11",
+    HOOKS:       "37af37fb-725c-8043-bc8b-fd6a27e62f05",
     VIDEOS:      "PASTE_VIDEOS_DB_ID",
     COMMISSIONS: "PASTE_COMMISSIONS_DB_ID",
     SCRIPTS:     "PASTE_SCRIPTS_DB_ID",
