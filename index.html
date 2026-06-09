@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jess's Creator Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & base ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0E0818;
+  --surface:    #18102A;
+  --surface2:   #221838;
+  --border:     #2E2245;
+  --text:       #FAF8FF;
+  --text-muted: #9B8FB5;
+  --plum:       #C9B8E8;
+  --blush:      #F2C4CE;
+  --gold:       #E8B86D;
+  --mint:       #A8E8C8;
+  --sky:        #A8D4E8;
+  --peach:      #E8C8A8;
+
+  /* pillar colors */
+  --col-products:    #C9B8E8;
+  --col-hooks:       #A8E8B8;
+  --col-scripts:     #F2C4CE;
+  --col-research:    #A8D4E8;
+  --col-videos:      #E8C8A8;
+  --col-commissions: #A8E8D8;
+
+  --sidebar-w: 220px;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --transition: 0.2s ease;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 100;
+}
+
+.sidebar-brand {
+  padding: 0 20px 28px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+.sidebar-brand h1 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--plum);
+  line-height: 1.2;
+}
+.sidebar-brand span {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+.nav-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--surface2); color: var(--text); }
+.nav-item .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+.sidebar-footer .account {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.sidebar-footer .account strong {
+  display: block;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+/* ── Main layout ──────────────────────────────────────────────────────── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.topbar-greeting {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text);
+}
+.topbar-right { display: flex; gap: 10px; align-items: center; }
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--surface2);
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.badge.live { background: rgba(168,232,200,0.15); color: var(--mint); }
+
+.content {
+  padding: 32px;
+  flex: 1;
+}
+
+/* ── GMV Hero strip ───────────────────────────────────────────────────── */
+.gmv-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.gmv-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+.gmv-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.gmv-card.plum::before    { background: var(--col-products); }
+.gmv-card.blush::before   { background: var(--col-scripts); }
+.gmv-card.mint::before    { background: var(--col-commissions); }
+.gmv-card.gold::before    { background: var(--col-videos); }
+
+.gmv-card:hover { border-color: var(--border); filter: brightness(1.05); }
+
+.gmv-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.gmv-value {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.gmv-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.gmv-delta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 6px;
+}
+.gmv-delta.up   { background: rgba(168,232,200,0.15); color: var(--mint); }
+.gmv-delta.neutral { background: var(--surface2); color: var(--text-muted); }
+
+/* ── Grid layout for body ─────────────────────────────────────────────── */
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* ── Panel card ───────────────────────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.panel-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+.pillar-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.panel-action {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.panel-action:hover { color: var(--text); }
+.panel-body { padding: 16px 20px; }
+
+/* ── Hero products ────────────────────────────────────────────────────── */
+.product-list { display: flex; flex-direction: column; gap: 10px; }
+
+.product-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  border: 1px solid transparent;
+  transition: border-color var(--transition);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.product-row:hover { border-color: var(--border); }
+
+.product-rank {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.product-info { flex: 1; min-width: 0; }
+.product-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.product-tag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+.tag-hero   { background: rgba(201,184,232,0.2); color: var(--col-products); }
+.tag-test   { background: rgba(232,184,109,0.2); color: var(--col-videos); }
+.tag-rotate { background: rgba(168,212,232,0.2); color: var(--col-research); }
+
+.product-gmv {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+  flex-shrink: 0;
+}
+.product-gmv small {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ── Today's to-dos ───────────────────────────────────────────────────── */
+.todo-list { display: flex; flex-direction: column; gap: 6px; }
+
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  transition: background var(--transition);
+}
+.todo-item.done { opacity: 0.45; }
+
+.todo-check {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.todo-check.checked {
+  background: var(--mint);
+  border-color: var(--mint);
+}
+.todo-check.checked::after {
+  content: '✓';
+  font-size: 11px;
+  color: #0E0818;
+  font-weight: 700;
+}
+
+.todo-text {
+  font-size: 0.84rem;
+  line-height: 1.4;
+  flex: 1;
+}
+.todo-item.done .todo-text { text-decoration: line-through; }
+
+.todo-priority {
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.priority-high   { background: rgba(242,196,206,0.2); color: var(--blush); }
+.priority-med    { background: rgba(232,184,109,0.2); color: var(--gold); }
+.priority-low    { background: var(--surface); color: var(--text-muted); }
+
+.todo-add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.todo-input {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+.todo-input:focus { border-color: var(--plum); }
+.todo-input::placeholder { color: var(--text-muted); }
+
+.btn {
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-primary {
+  background: var(--plum);
+  color: var(--bg);
+}
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-sm { padding: 6px 12px; font-size: 0.78rem; }
+
+/* ── Quick-launch tool cards ─────────────────────────────────────────── */
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.tool-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.tool-card:hover::after { opacity: 1; }
+.tool-card:hover { border-color: #3A2D60; transform: translateY(-1px); }
+
+.tool-card[data-color="products"]::after    { background: var(--col-products); }
+.tool-card[data-color="hooks"]::after       { background: var(--col-hooks); }
+.tool-card[data-color="scripts"]::after     { background: var(--col-scripts); }
+.tool-card[data-color="research"]::after    { background: var(--col-research); }
+.tool-card[data-color="videos"]::after      { background: var(--col-videos); }
+.tool-card[data-color="commissions"]::after { background: var(--col-commissions); }
+
+.tool-icon {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+.tool-name {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 4px;
+}
+.tool-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.tool-count {
+  position: absolute;
+  top: 14px; right: 14px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--surface2);
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+/* ── Recent hooks preview ─────────────────────────────────────────────── */
+.hook-list { display: flex; flex-direction: column; gap: 8px; }
+.hook-item {
+  padding: 10px 12px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--col-hooks);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.hook-item:hover { color: var(--text); }
+.hook-type {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--col-hooks);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+/* ── Loading states ───────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skel-text  { height: 14px; margin: 6px 0; }
+.skel-title { height: 28px; width: 60%; margin-bottom: 8px; }
+
+/* ── Notification bar ─────────────────────────────────────────────────── */
+.notif-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background: rgba(201,184,232,0.08);
+  border-bottom: 1px solid rgba(201,184,232,0.2);
+  font-size: 0.8rem;
+  color: var(--plum);
+}
+.notif-bar strong { color: var(--text); }
+.notif-dot { width: 6px; height: 6px; background: var(--plum); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ── Empty states ─────────────────────────────────────────────────────── */
+.empty {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+.empty-icon { font-size: 1.8rem; margin-bottom: 8px; }
+
+/* ── Config banner (shown when API not set up yet) ────────────────────── */
+.config-banner {
+  background: rgba(232,184,109,0.1);
+  border: 1px solid rgba(232,184,109,0.3);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.config-banner-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+.config-banner h3 { font-size: 0.875rem; font-weight: 600; color: var(--gold); margin-bottom: 4px; }
+.config-banner p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+.config-banner code {
+  background: var(--surface2);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.85em;
+  color: var(--text);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .grid-2col { grid-template-columns: 1fr; }
+  .grid-3col { grid-template-columns: 1fr 1fr; }
+  .gmv-strip { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .grid-3col { grid-template-columns: 1fr; }
+  .gmv-strip { grid-template-columns: 1fr 1fr; }
+  .content { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h1>creator<br>hub ✦</h1>
+    <span>@its.jess.ok</span>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item active" href="index.html">
+      <span class="dot" style="background:var(--plum)"></span> Dashboard
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Content Tools</div>
+    <a class="nav-item" href="pages/products.html">
+      <span class="dot" style="background:var(--col-products)"></span> Products
+    </a>
+    <a class="nav-item" href="pages/hooks.html">
+      <span class="dot" style="background:var(--col-hooks)"></span> Hook Bank
+    </a>
+    <a class="nav-item" href="pages/scripts.html">
+      <span class="dot" style="background:var(--col-scripts)"></span> Script Generator
+    </a>
+    <a class="nav-item" href="pages/research.html">
+      <span class="dot" style="background:var(--col-research)"></span> Product Research
+    </a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Performance</div>
+    <a class="nav-item" href="pages/videos.html">
+      <span class="dot" style="background:var(--col-videos)"></span> Videos
+    </a>
+    <a class="nav-item" href="pages/commissions.html">
+      <span class="dot" style="background:var(--col-commissions)"></span> Commissions
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="account">
+      <strong>@its.jess.ok</strong>
+      beauty · skincare
+    </div>
+    <div class="account" style="margin-top:8px">
+      <strong>@jessirl466</strong>
+      wellness · home
+    </div>
+  </div>
+</aside>
+
+<!-- ── Main ────────────────────────────────────────────────────────────── -->
+<main class="main">
+
+  <div class="notif-bar" id="notifBar" style="display:none">
+    <div class="notif-dot"></div>
+    <span id="notifText"></span>
+  </div>
+
+  <div class="topbar">
+    <div>
+      <div class="topbar-date" id="dateStr"></div>
+      <div class="topbar-greeting" id="greeting"></div>
+    </div>
+    <div class="topbar-right">
+      <span class="badge live" id="connectionStatus">● connecting…</span>
+      <span class="badge" id="weekdayBadge"></span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Config banner — hidden once API is set up -->
+    <div class="config-banner" id="configBanner">
+      <div class="config-banner-icon">⚙️</div>
+      <div>
+        <h3>Finish setup to go live</h3>
+        <p>
+          Open <code>assets/js/config.js</code> and paste your Vercel API URL + Notion database IDs.
+          Until then, the hub runs on sample data. <a href="#" style="color:var(--gold)" onclick="dismissBanner()">Dismiss</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- GMV strip -->
+    <div class="gmv-strip">
+      <div class="gmv-card plum">
+        <div class="gmv-label">30-day GMV</div>
+        <div class="gmv-value" id="stat-gmv">$291</div>
+        <div class="gmv-sub">all products</div>
+        <div class="gmv-delta up" id="stat-gmv-delta">↑ tracking</div>
+      </div>
+      <div class="gmv-card blush">
+        <div class="gmv-label">Commissions</div>
+        <div class="gmv-value" id="stat-comm">$58</div>
+        <div class="gmv-sub">30-day estimate</div>
+        <div class="gmv-delta up">≈ 20% rate</div>
+      </div>
+      <div class="gmv-card mint">
+        <div class="gmv-label">Hero Products</div>
+        <div class="gmv-value" id="stat-heroes">3</div>
+        <div class="gmv-sub">active converters</div>
+        <div class="gmv-delta neutral">focus tier</div>
+      </div>
+      <div class="gmv-card gold">
+        <div class="gmv-label">Videos Live</div>
+        <div class="gmv-value" id="stat-videos">—</div>
+        <div class="gmv-sub">from Notion</div>
+        <div class="gmv-delta neutral" id="stat-videos-sub">loading…</div>
+      </div>
+    </div>
+
+    <!-- Hero products + To-dos -->
+    <div class="grid-2col">
+
+      <!-- Hero products panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="pillar-dot" style="background:var(--col-products)"></span>
+            Hero Products
+          </div>
+          <a class="panel-action" href="pages/products.html">View all →</a>
+        </div>
+        <div class="panel-body">
+          <div class="product-list" id="productList">
+            <!-- skeleton -->
+            <div style="padding:12px;background:var(--surface2);border-radius:8px">
+              <div class="skeleton skel-title"></div>
+              <div class="skeleton skel-text" style="width:70%"></div>
+            </div>
+            <div style="padding:12px;background:var(--surface2);border-radius:8px">
+              <div class="skeleton skel-title"></div>
+              <div class="skeleton skel-text" style="width:50%"></div>
+            </div>
+            <div style="padding:12px;background:var(--surface2);border-radius:8px">
+              <div class="skeleton skel-title"></div>
+              <div class="skeleton skel-text" style="width:60%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Today's to-dos panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="pillar-dot" style="background:var(--blush)"></span>
+            Today's List
+          </div>
+          <span class="panel-action" id="todoClearDone" onclick="clearDone()" style="cursor:pointer">Clear done</span>
+        </div>
+        <div class="panel-body">
+          <div class="todo-list" id="todoList">
+            <div class="empty"><div class="empty-icon">✓</div>Loading tasks…</div>
+          </div>
+          <div class="todo-add-row">
+            <input class="todo-input" id="todoInput" placeholder="Add a task…" onkeydown="if(event.key==='Enter')addTodo()">
+            <button class="btn btn-primary btn-sm" onclick="addTodo()">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tool quick-launch -->
+    <div class="grid-3col">
+      <a class="tool-card" href="pages/hooks.html" data-color="hooks">
+        <div class="tool-count" id="hookCount">— hooks</div>
+        <div class="tool-icon">🪝</div>
+        <div class="tool-name">Hook Bank</div>
+        <div class="tool-desc">Pain point, curiosity gap, FOMO — browse and copy compliance-safe openers.</div>
+      </a>
+      <a class="tool-card" href="pages/scripts.html" data-color="scripts">
+        <div class="tool-icon">✍️</div>
+        <div class="tool-name">Script Generator</div>
+        <div class="tool-desc">4 Pillars + buyer psychology. Generate a full script brief in seconds.</div>
+      </a>
+      <a class="tool-card" href="pages/research.html" data-color="research">
+        <div class="tool-icon">🔬</div>
+        <div class="tool-name">Product Research</div>
+        <div class="tool-desc">Claude-generated ingredient breakdowns, claim angles, and competitor gaps.</div>
+      </a>
+      <a class="tool-card" href="pages/videos.html" data-color="videos">
+        <div class="tool-icon">🎬</div>
+        <div class="tool-name">Video Tracker</div>
+        <div class="tool-desc">Log, track completion rate, watch time, and GMV per post.</div>
+      </a>
+      <a class="tool-card" href="pages/commissions.html" data-color="commissions">
+        <div class="tool-icon">💸</div>
+        <div class="tool-name">Commissions</div>
+        <div class="tool-desc">Track earnings by product, brand, and account toward $200K/yr.</div>
+      </a>
+      <a class="tool-card" href="pages/products.html" data-color="products">
+        <div class="tool-icon">🛍️</div>
+        <div class="tool-name">Product Vault</div>
+        <div class="tool-desc">Full catalog with hero/test/rotate tiers, commission rates, and claim notes.</div>
+      </a>
+    </div>
+
+    <!-- Recent hooks preview -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <span class="pillar-dot" style="background:var(--col-hooks)"></span>
+          Recent Hooks
+        </div>
+        <a class="panel-action" href="pages/hooks.html">Hook bank →</a>
+      </div>
+      <div class="panel-body">
+        <div class="hook-list" id="hookPreview">
+          <div class="empty"><div class="empty-icon">🪝</div>Loading hooks…</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<script src="../assets/js/config.js"></script>
+<script>
+// ── Topbar date / greeting ─────────────────────────────────────────────
+(function() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('dateStr').textContent =
+    `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+  const h = now.getHours();
+  const greet = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = `${greet}, Jess ✦`;
+  document.getElementById('weekdayBadge').textContent =
+    now.getDay() === 0 || now.getDay() === 6 ? '🌿 Weekend' : '🎬 Content day';
+})();
+
+// ── Config check ──────────────────────────────────────────────────────
+const isConfigured = window.HUB_CONFIG?.API_BASE !== "https://your-api.vercel.app/api/notion";
+if (isConfigured) document.getElementById('configBanner').style.display = 'none';
+
+function dismissBanner() {
+  document.getElementById('configBanner').style.display = 'none';
+  localStorage.setItem('hub_banner_dismissed', '1');
+}
+if (localStorage.getItem('hub_banner_dismissed')) {
+  document.getElementById('configBanner').style.display = 'none';
+}
+
+// ── Sample / fallback data ────────────────────────────────────────────
+const SAMPLE_PRODUCTS = [
+  { name: "e.l.f. Halo Glow",          tier: "hero",   gmv: "$204",  rate: "10%", account: "@its.jess.ok" },
+  { name: "Medicube Glass Glow Set",    tier: "hero",   gmv: "$67",   rate: "12%", account: "@its.jess.ok" },
+  { name: "Kulfi Lassi Lips Oil",       tier: "hero",   gmv: "$20",   rate: "8%",  account: "@its.jess.ok" },
+  { name: "Physician's Choice Probiotic",tier:"test",   gmv: "$0",    rate: "15%", account: "@jessirl466" },
+  { name: "Goli Nutrition Gummies",     tier: "test",   gmv: "$0",    rate: "12%", account: "@jessirl466" },
+];
+
+const SAMPLE_HOOKS = [
+  { type: "Pain Point",    text: "My skin was doing this one embarrassing thing every single morning…" },
+  { type: "Curiosity Gap", text: "I genuinely cannot believe this is an orange cart product." },
+  { type: "FOMO",          text: "Everyone in my DMs keeps asking what this is so I finally filmed it." },
+  { type: "Authority",     text: "I've tested 47 serums this year. This one actually changed my skin." },
+  { type: "Social Proof",  text: "My whole comment section said I was glowing — here's what I added." },
+];
+
+// ── Render products ───────────────────────────────────────────────────
+async function loadProducts() {
+  const list = document.getElementById('productList');
+  let products = SAMPLE_PRODUCTS;
+
+  if (isConfigured) {
+    try {
+      const data = await Notion.query(HUB_CONFIG.DB.PRODUCTS, {}, [
+        { property: 'GMV_30d', direction: 'descending' }
+      ]);
+      if (data.results?.length) {
+        products = data.results.map(p => ({
+          name:    Notion.text(p.properties.Name),
+          tier:    Notion.text(p.properties.Tier),
+          gmv:     '$' + (Notion.text(p.properties.GMV_30d) || 0),
+          rate:    Notion.text(p.properties.Commission_Rate),
+          account: Notion.text(p.properties.Account),
+          id:      p.id,
+        }));
+      }
+      setStatus('connected');
+    } catch(e) {
+      console.warn('Notion load failed, using sample data', e);
+      setStatus('offline');
+    }
+  } else {
+    setStatus('demo');
+  }
+
+  list.innerHTML = products.slice(0, 5).map((p, i) => `
+    <div class="product-row" onclick="window.location='pages/products.html'">
+      <div class="product-rank">${i + 1}</div>
+      <div class="product-info">
+        <div class="product-name">${p.name}</div>
+        <div class="product-meta">${p.account} · ${p.rate} commission</div>
+      </div>
+      <span class="product-tag tag-${p.tier}">${p.tier}</span>
+      <div class="product-gmv">${p.gmv}<small>30d GMV</small></div>
+    </div>
+  `).join('');
+}
+
+// ── To-dos (localStorage — no Notion needed) ──────────────────────────
+const TODO_KEY = 'hub_todos_' + new Date().toDateString();
+
+function getTodos() {
+  try { return JSON.parse(localStorage.getItem(TODO_KEY)) || getDefaultTodos(); }
+  catch { return getDefaultTodos(); }
+}
+function saveTodos(todos) {
+  localStorage.setItem(TODO_KEY, JSON.stringify(todos));
+}
+function getDefaultTodos() {
+  return [
+    { id: Date.now()+1, text: "Post 1 video to @its.jess.ok", done: false, priority: "high" },
+    { id: Date.now()+2, text: "Check TikTok Shop commissions dashboard", done: false, priority: "med" },
+    { id: Date.now()+3, text: "Draft hook for Medicube Glass Glow", done: false, priority: "med" },
+    { id: Date.now()+4, text: "Review @jessirl466 — max 5 shoppable this week", done: false, priority: "high" },
+  ];
+}
+
+function renderTodos() {
+  const todos = getTodos();
+  const list = document.getElementById('todoList');
+  if (!todos.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">✓</div>All done — add a task below.</div>';
+    return;
+  }
+  list.innerHTML = todos.map(t => `
+    <div class="todo-item ${t.done ? 'done' : ''}" id="todo-${t.id}">
+      <div class="todo-check ${t.done ? 'checked' : ''}" onclick="toggleTodo(${t.id})"></div>
+      <div class="todo-text">${t.text}</div>
+      <span class="todo-priority priority-${t.priority}">${t.priority}</span>
+    </div>
+  `).join('');
+}
+
+function toggleTodo(id) {
+  const todos = getTodos();
+  const t = todos.find(x => x.id === id);
+  if (t) { t.done = !t.done; saveTodos(todos); renderTodos(); }
+}
+
+function addTodo() {
+  const input = document.getElementById('todoInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const todos = getTodos();
+  todos.push({ id: Date.now(), text, done: false, priority: 'med' });
+  saveTodos(todos); renderTodos();
+  input.value = '';
+}
+
+function clearDone() {
+  const todos = getTodos().filter(t => !t.done);
+  saveTodos(todos); renderTodos();
+}
+
+// ── Hooks preview ─────────────────────────────────────────────────────
+async function loadHooks() {
+  const el = document.getElementById('hookPreview');
+  const countEl = document.getElementById('hookCount');
+  let hooks = SAMPLE_HOOKS;
+
+  if (isConfigured) {
+    try {
+      const data = await Notion.query(HUB_CONFIG.DB.HOOKS, {}, [
+        { timestamp: 'created_time', direction: 'descending' }
+      ]);
+      if (data.results?.length) {
+        hooks = data.results.slice(0, 5).map(h => ({
+          type: Notion.text(h.properties.Hook_Type),
+          text: Notion.text(h.properties.Hook_Text),
+        }));
+        countEl.textContent = data.results.length + ' hooks';
+      }
+    } catch(e) { /* fallback */ }
+  } else {
+    countEl.textContent = SAMPLE_HOOKS.length + ' hooks (demo)';
+  }
+
+  el.innerHTML = hooks.map(h => `
+    <div class="hook-item" onclick="navigator.clipboard.writeText('${h.text.replace(/'/g,"\\'")}').then(()=>showNotif('Hook copied!'))">
+      <div class="hook-type">${h.type}</div>
+      ${h.text}
+    </div>
+  `).join('');
+}
+
+// ── Connection status ─────────────────────────────────────────────────
+function setStatus(state) {
+  const el = document.getElementById('connectionStatus');
+  if (state === 'connected') { el.textContent = '● live'; el.className = 'badge live'; }
+  else if (state === 'demo')  { el.textContent = '○ demo mode'; el.className = 'badge'; }
+  else                        { el.textContent = '○ offline'; el.className = 'badge'; }
+}
+
+// ── Notification ──────────────────────────────────────────────────────
+function showNotif(msg, duration = 2500) {
+  const bar = document.getElementById('notifBar');
+  document.getElementById('notifText').textContent = msg;
+  bar.style.display = 'flex';
+  setTimeout(() => bar.style.display = 'none', duration);
+}
+
+// ── Init ──────────────────────────────────────────────────────────────
+renderTodos();
+loadProducts();
+loadHooks();
+</script>
+</body>
+</html>

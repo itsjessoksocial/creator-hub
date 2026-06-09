@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Research · Creator Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0E0818; --surface:#18102A; --surface2:#221838; --border:#2E2245;
+  --text:#FAF8FF; --text-muted:#9B8FB5;
+  --plum:#C9B8E8; --blush:#F2C4CE; --gold:#E8B86D; --mint:#A8E8C8;
+  --col-products:#C9B8E8; --col-hooks:#A8E8B8; --col-scripts:#F2C4CE;
+  --col-research:#A8D4E8; --col-videos:#E8C8A8; --col-commissions:#A8E8D8;
+  --sidebar-w:220px; --radius:14px; --radius-sm:8px;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --transition:0.2s ease;
+}
+html,body{height:100%;}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);display:flex;}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────── */
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0;position:fixed;top:0;left:0;z-index:100;}
+.sidebar-brand{padding:0 20px 28px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.sidebar-brand h1{font-family:var(--font-display);font-size:1.15rem;font-weight:700;color:var(--plum);line-height:1.2;}
+.sidebar-brand span{display:block;font-size:0.7rem;color:var(--text-muted);margin-top:3px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-section{padding:0 12px;margin-bottom:8px;}
+.nav-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);padding:0 8px;margin-bottom:4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);color:var(--text-muted);text-decoration:none;font-size:0.875rem;font-weight:500;transition:all var(--transition);}
+.nav-item:hover,.nav-item.active{background:var(--surface2);color:var(--text);}
+.nav-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);}
+.sidebar-footer strong{display:block;color:var(--text);font-weight:500;margin-bottom:2px;}
+
+/* ── Main ────────────────────────────────────────────────────────────── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.back-link{color:var(--text-muted);text-decoration:none;font-size:0.84rem;transition:color var(--transition);}
+.back-link:hover{color:var(--text);}
+.page-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;}
+.page-tag{font-size:0.7rem;padding:4px 10px;border-radius:10px;background:rgba(168,212,232,0.15);color:var(--col-research);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
+
+.layout{display:grid;grid-template-columns:360px 1fr;gap:0;flex:1;min-height:0;}
+.left-col{border-right:1px solid var(--border);display:flex;flex-direction:column;height:calc(100vh - 73px);position:sticky;top:73px;overflow-y:auto;}
+.right-col{padding:32px;overflow-y:auto;}
+
+/* ── Research form ───────────────────────────────────────────────────── */
+.research-form{padding:24px;display:flex;flex-direction:column;gap:16px;flex:1;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:0.72rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;}
+.form-label .req{color:var(--col-research);}
+.form-input,.form-select,.form-textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-family:var(--font-body);font-size:0.875rem;color:var(--text);outline:none;transition:border-color var(--transition);}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--col-research);}
+.form-select option{background:var(--surface2);}
+.form-textarea{min-height:80px;resize:vertical;line-height:1.5;}
+.form-hint{font-size:0.72rem;color:var(--text-muted);line-height:1.4;}
+
+.section-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sec-check{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--surface2);border-radius:var(--radius-sm);cursor:pointer;border:1px solid var(--border);transition:all var(--transition);}
+.sec-check:hover{border-color:var(--col-research);}
+.sec-check input{accent-color:var(--col-research);}
+.sec-check label{font-size:0.78rem;font-weight:500;cursor:pointer;}
+
+.research-btn{padding:14px;background:var(--col-research);color:#0A1520;border:none;border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.9rem;font-weight:700;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;}
+.research-btn:hover{filter:brightness(1.1);}
+.research-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.spinner{width:14px;height:14px;border:2px solid rgba(10,21,32,0.3);border-top-color:#0A1520;border-radius:50%;animation:spin 0.8s linear infinite;display:none;}
+.research-btn.loading .spinner{display:block;}
+.research-btn.loading .btn-label{display:none;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Saved research list ─────────────────────────────────────────────── */
+.saved-section{border-top:1px solid var(--border);padding:16px 20px;}
+.saved-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:10px;}
+.saved-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border-radius:var(--radius-sm);cursor:pointer;transition:background var(--transition);}
+.saved-item:hover{background:var(--surface2);}
+.saved-name{font-size:0.84rem;font-weight:500;}
+.saved-date{font-size:0.7rem;color:var(--text-muted);}
+.saved-empty{font-size:0.78rem;color:var(--text-muted);padding:8px 12px;}
+
+/* ── Results area ────────────────────────────────────────────────────── */
+.result-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;color:var(--text-muted);}
+.result-empty .icon{font-size:3rem;margin-bottom:16px;}
+.result-empty h3{font-family:var(--font-display);font-size:1.2rem;color:var(--text);margin-bottom:8px;}
+.result-empty p{font-size:0.84rem;line-height:1.6;max-width:380px;}
+
+.result-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:28px;}
+.result-product-name{font-family:var(--font-display);font-size:1.6rem;font-weight:700;line-height:1.2;}
+.result-brand{font-size:0.84rem;color:var(--text-muted);margin-top:4px;}
+.result-actions{display:flex;gap:8px;flex-shrink:0;}
+.icon-btn{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);font-size:0.78rem;cursor:pointer;transition:all var(--transition);font-family:var(--font-body);}
+.icon-btn:hover{color:var(--text);border-color:var(--col-research);}
+
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+
+/* ── Research cards ─────────────────────────────────────────────────── */
+.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.r-card-header{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);}
+.r-card-icon{font-size:1rem;}
+.r-card-title{font-size:0.84rem;font-weight:600;}
+.r-card-body{padding:16px 18px;}
+
+.claim-list{display:flex;flex-direction:column;gap:8px;}
+.claim-item{display:flex;gap:10px;align-items:flex-start;}
+.claim-bullet{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;flex-shrink:0;margin-top:1px;}
+.claim-safe .claim-bullet{background:rgba(168,232,200,0.2);color:var(--mint);}
+.claim-avoid .claim-bullet{background:rgba(242,196,206,0.2);color:var(--blush);}
+.claim-text{font-size:0.84rem;line-height:1.5;}
+.claim-text strong{display:block;font-weight:600;margin-bottom:2px;}
+.claim-text span{color:var(--text-muted);font-size:0.78rem;}
+
+.ingredient-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+.ingredient-row{padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start;}
+.ing-name{font-size:0.84rem;font-weight:600;}
+.ing-role{font-size:0.72rem;color:var(--text-muted);margin-top:2px;}
+.ing-badge{font-size:0.65rem;padding:3px 8px;border-radius:8px;font-weight:600;white-space:nowrap;}
+.star-ing{background:rgba(168,212,232,0.15);color:var(--col-research);}
+.supp-ing{background:var(--surface);color:var(--text-muted);}
+
+.audience-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.audience-card{padding:12px;background:var(--surface2);border-radius:var(--radius-sm);border-left:2px solid var(--col-research);}
+.aud-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--col-research);font-weight:600;margin-bottom:4px;}
+.aud-text{font-size:0.82rem;line-height:1.4;}
+
+.hook-suggestions{display:flex;flex-direction:column;gap:8px;}
+.hook-sug{padding:12px 14px;background:var(--surface2);border-radius:var(--radius-sm);border-left:3px solid var(--col-hooks);font-size:0.84rem;line-height:1.5;cursor:pointer;transition:border-color var(--transition);}
+.hook-sug:hover{border-color:var(--mint);}
+.hook-sug-type{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--col-hooks);font-weight:600;margin-bottom:4px;}
+
+.compliance-strip{background:rgba(168,232,200,0.06);border:1px solid rgba(168,232,200,0.2);border-radius:var(--radius);padding:16px 20px;margin-top:4px;grid-column:1/-1;}
+.comp-title{font-size:0.78rem;font-weight:600;color:var(--mint);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.comp-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.comp-rule{font-size:0.75rem;color:var(--text-muted);display:flex;align-items:flex-start;gap:6px;line-height:1.4;}
+.comp-rule.pass::before{content:'✓';color:var(--mint);font-weight:700;flex-shrink:0;}
+.comp-rule.fail::before{content:'✕';color:var(--blush);font-weight:700;flex-shrink:0;}
+
+/* ── Loading skeleton ────────────────────────────────────────────────── */
+.skel{background:linear-gradient(90deg,var(--surface2) 25%,var(--surface) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--surface);border:1px solid var(--col-research);color:var(--col-research);padding:10px 18px;border-radius:var(--radius-sm);font-size:0.84rem;font-weight:500;z-index:500;opacity:0;transform:translateY(10px);transition:all var(--transition);pointer-events:none;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){.layout{grid-template-columns:1fr}.left-col{position:static;height:auto}.result-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand"><h1>creator<br>hub ✦</h1><span>@its.jess.ok</span></div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item" href="../index.html"><span class="dot" style="background:var(--plum)"></span> Dashboard</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Content Tools</div>
+    <a class="nav-item" href="products.html"><span class="dot" style="background:var(--col-products)"></span> Products</a>
+    <a class="nav-item" href="hooks.html"><span class="dot" style="background:var(--col-hooks)"></span> Hook Bank</a>
+    <a class="nav-item" href="scripts.html"><span class="dot" style="background:var(--col-scripts)"></span> Script Generator</a>
+    <a class="nav-item active" href="research.html"><span class="dot" style="background:var(--col-research)"></span> Product Research</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Performance</div>
+    <a class="nav-item" href="videos.html"><span class="dot" style="background:var(--col-videos)"></span> Videos</a>
+    <a class="nav-item" href="commissions.html"><span class="dot" style="background:var(--col-commissions)"></span> Commissions</a>
+  </div>
+  <div class="sidebar-footer">
+    <strong>@its.jess.ok</strong>beauty · skincare
+    <strong style="margin-top:8px">@jessirl466</strong>wellness · home
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="back-link" href="../index.html">← Hub</a>
+      <div class="page-title">Product Research</div>
+      <span class="page-tag">AI Analysis</span>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Left: Form -->
+    <div class="left-col">
+      <div class="research-form">
+        <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:4px;">
+          <div style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:4px;">Research a Product</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.4;">Claude analyzes ingredients, generates compliant claim angles, and writes ready-to-use hooks.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Product Name <span class="req">*</span></label>
+          <input class="form-input" id="f-product" placeholder="e.g. SKIN1004 Madagascar Centella Ampoule">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Brand</label>
+          <input class="form-input" id="f-brand" placeholder="e.g. SKIN1004">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="f-category">
+            <option value="skincare">Skincare</option>
+            <option value="makeup">Makeup</option>
+            <option value="haircare">Haircare</option>
+            <option value="supplement">Supplement / Wellness</option>
+            <option value="home">Home / Lifestyle</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Key Ingredients (optional)</label>
+          <textarea class="form-textarea" id="f-ingredients" placeholder="Paste ingredients list or key actives you know about…" style="min-height:60px"></textarea>
+          <div class="form-hint">Leave blank and Claude will use its knowledge of the product.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Target Audience</label>
+          <input class="form-input" id="f-audience" placeholder="e.g. sensitive skin, redness-prone, 25-35">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Include in Report</label>
+          <div class="section-toggle">
+            <div class="sec-check"><input type="checkbox" id="sec-ingredients" checked><label for="sec-ingredients">Ingredients</label></div>
+            <div class="sec-check"><input type="checkbox" id="sec-claims" checked><label for="sec-claims">Claim Angles</label></div>
+            <div class="sec-check"><input type="checkbox" id="sec-audience" checked><label for="sec-audience">Audience Intel</label></div>
+            <div class="sec-check"><input type="checkbox" id="sec-hooks" checked><label for="sec-hooks">Hook Ideas</label></div>
+            <div class="sec-check"><input type="checkbox" id="sec-compliance" checked><label for="sec-compliance">Compliance Check</label></div>
+            <div class="sec-check"><input type="checkbox" id="sec-script" checked><label for="sec-script">Script Angle</label></div>
+          </div>
+        </div>
+
+        <button class="research-btn" id="researchBtn" onclick="runResearch()">
+          <div class="spinner"></div>
+          <span class="btn-label">🔬 Run Research</span>
+        </button>
+      </div>
+
+      <!-- Saved research -->
+      <div class="saved-section">
+        <div class="saved-label">Saved Reports</div>
+        <div id="savedList">
+          <div class="saved-empty">No saved reports yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="right-col" id="rightCol">
+      <div class="result-empty">
+        <div class="icon">🔬</div>
+        <h3>Research ready to run</h3>
+        <p>Enter a product name on the left and Claude will generate a full breakdown — ingredients, compliant claim angles, audience intel, hook ideas, and a script angle.</p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="../assets/js/config.js"></script>
+<script>
+// Prefill from products page
+const prefill = localStorage.getItem('hub_prefill_research');
+if (prefill) { document.getElementById('f-product').value = prefill; localStorage.removeItem('hub_prefill_research'); }
+
+// ── System prompt ─────────────────────────────────────────────────────
+function buildSystemPrompt() {
+  const category = document.getElementById('f-category').value;
+  const isSupp = category === 'supplement';
+  return `You are a product research analyst for a TikTok Shop affiliate creator in the beauty, skincare, and wellness space. Your job is to produce a structured research brief that helps her make TikTok content that converts.
+
+COMPLIANCE RULES — these are non-negotiable and must be reflected in all output:
+- NO price mentions, sale language, or competitor comparisons
+- NO "dupe" language
+- NO "link in bio" — always "orange cart"
+- On-screen text: 6 words maximum
+- Cosmetic claims ONLY for beauty/skincare — no disease/condition treatment language
+${isSupp ? '- SUPPLEMENT: All claims must include FDA disclaimer. Focus on general wellness language only.\n- FDA disclaimer: "These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease."' : ''}
+
+Your output must be valid JSON only — no markdown fences, no preamble. Structure:
+{
+  "product_name": "",
+  "brand": "",
+  "one_line_summary": "one sentence, what this product does cosmetically",
+  "ingredients": [
+    { "name": "", "role": "", "is_star": true/false, "tiktok_angle": "" }
+  ],
+  "claim_angles": [
+    { "claim": "safe cosmetic claim", "why_it_works": "", "avoid": "version of this claim that crosses compliance line" }
+  ],
+  "audience_intel": {
+    "primary": "describe the primary buyer persona",
+    "pain_point": "the core frustration this product solves",
+    "hesitation": "the #1 reason someone scrolls past",
+    "wow_moment": "the specific result that makes them buy"
+  },
+  "hook_ideas": [
+    { "type": "Pain Point / Curiosity Gap / FOMO / Authority / Social Proof", "hook": "" }
+  ],
+  "compliance_checks": [
+    { "rule": "description of rule", "status": "pass/fail", "note": "" }
+  ],
+  "script_angle": "2-3 sentence recommended content angle for Jess's style — authentic, non-ad-feeling, specific"${isSupp ? ',\n  "fda_disclaimer": "These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease."' : ''}
+}`;
+}
+
+function buildUserPrompt() {
+  const product     = document.getElementById('f-product').value.trim();
+  const brand       = document.getElementById('f-brand').value.trim();
+  const category    = document.getElementById('f-category').value;
+  const ingredients = document.getElementById('f-ingredients').value.trim();
+  const audience    = document.getElementById('f-audience').value.trim();
+  const sections    = ['ingredients','claims','audience','hooks','compliance','script']
+    .filter(s => document.getElementById('sec-'+s)?.checked).join(', ');
+
+  return `Research this product for TikTok Shop affiliate content:
+
+Product: ${product}
+Brand: ${brand || 'unknown'}
+Category: ${category}
+Known ingredients: ${ingredients || 'use your knowledge'}
+Target audience: ${audience || 'general beauty/skincare audience'}
+Sections needed: ${sections}
+
+Generate 3-4 ingredients (prioritize star actives), 3 claim angles with compliance notes, 3-5 hook ideas, and a specific script angle for Jess's warm, dry-humored authentic style.`;
+}
+
+// ── Run research ──────────────────────────────────────────────────────
+async function runResearch() {
+  const product = document.getElementById('f-product').value.trim();
+  if (!product) { document.getElementById('f-product').focus(); document.getElementById('f-product').style.borderColor='var(--blush)'; return; }
+  document.getElementById('f-product').style.borderColor = '';
+
+  const btn = document.getElementById('researchBtn');
+  btn.disabled = true; btn.classList.add('loading');
+  showLoading(product);
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: buildSystemPrompt(),
+        messages: [{ role: 'user', content: buildUserPrompt() }],
+      }),
+    });
+    const data = await resp.json();
+    const raw = data.content?.find(c => c.type === 'text')?.text || '{}';
+    const result = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    renderResult(result);
+    saveReport(result);
+  } catch(e) {
+    console.error(e);
+    document.getElementById('rightCol').innerHTML = `<div class="result-empty"><div class="icon">⚠️</div><h3>Research failed</h3><p>Check your connection and try again. If the problem persists, the AI may be busy.</p></div>`;
+  }
+
+  btn.disabled = false; btn.classList.remove('loading');
+}
+
+function showLoading(product) {
+  document.getElementById('rightCol').innerHTML = `
+    <div style="max-width:800px">
+      <div style="font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:6px">${product}</div>
+      <div style="font-size:0.84rem;color:var(--text-muted);margin-bottom:28px">Analyzing product…</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        ${[1,2,3,4].map(() => `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px">
+          <div class="skel" style="height:14px;width:40%;margin-bottom:14px"></div>
+          <div class="skel" style="height:12px;margin-bottom:6px"></div>
+          <div class="skel" style="height:12px;width:80%;margin-bottom:6px"></div>
+          <div class="skel" style="height:12px;width:60%"></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ── Render result ─────────────────────────────────────────────────────
+function renderResult(r) {
+  const showIngredients  = document.getElementById('sec-ingredients')?.checked;
+  const showClaims       = document.getElementById('sec-claims')?.checked;
+  const showAudience     = document.getElementById('sec-audience')?.checked;
+  const showHooks        = document.getElementById('sec-hooks')?.checked;
+  const showCompliance   = document.getElementById('sec-compliance')?.checked;
+  const showScript       = document.getElementById('sec-script')?.checked;
+
+  let html = `
+    <div style="max-width:860px">
+      <div class="result-header">
+        <div>
+          <div class="result-product-name">${r.product_name || 'Product Analysis'}</div>
+          <div class="result-brand">${r.brand || ''} ${r.one_line_summary ? '· ' + r.one_line_summary : ''}</div>
+          ${r.fda_disclaimer ? `<div style="margin-top:8px;font-size:0.72rem;color:var(--gold);background:rgba(232,184,109,0.1);border:1px solid rgba(232,184,109,0.3);border-radius:8px;padding:6px 10px">⚠️ Supplement — FDA disclaimer required in all content</div>` : ''}
+        </div>
+        <div class="result-actions">
+          <button class="icon-btn" onclick="copyReport()">📋 Copy</button>
+          <button class="icon-btn" onclick="goToScript('${(r.product_name||'').replace(/'/g,"\\'")}')">✍️ Script</button>
+        </div>
+      </div>
+      <div class="result-grid">`;
+
+  // Ingredients
+  if (showIngredients && r.ingredients?.length) {
+    html += `<div class="r-card">
+      <div class="r-card-header"><span class="r-card-icon">🧪</span><span class="r-card-title">Key Ingredients</span></div>
+      <div class="r-card-body">
+        <div class="ingredient-grid">
+          ${r.ingredients.map(ing => `
+          <div class="ingredient-row">
+            <div>
+              <div class="ing-name">${ing.name}</div>
+              <div class="ing-role">${ing.role}</div>
+              ${ing.tiktok_angle ? `<div style="font-size:0.72rem;color:var(--col-research);margin-top:4px">→ "${ing.tiktok_angle}"</div>` : ''}
+            </div>
+            <span class="ing-badge ${ing.is_star ? 'star-ing' : 'supp-ing'}">${ing.is_star ? '⭐ Star' : 'Supporting'}</span>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Claim angles
+  if (showClaims && r.claim_angles?.length) {
+    html += `<div class="r-card">
+      <div class="r-card-header"><span class="r-card-icon">💬</span><span class="r-card-title">Compliant Claim Angles</span></div>
+      <div class="r-card-body">
+        <div class="claim-list">
+          ${r.claim_angles.map(c => `
+          <div class="claim-item claim-safe">
+            <div class="claim-bullet">✓</div>
+            <div class="claim-text">
+              <strong>${c.claim}</strong>
+              <span>${c.why_it_works}</span>
+              ${c.avoid ? `<span style="color:var(--blush);margin-top:4px;display:block">✕ Avoid: "${c.avoid}"</span>` : ''}
+            </div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Audience
+  if (showAudience && r.audience_intel) {
+    const a = r.audience_intel;
+    html += `<div class="r-card">
+      <div class="r-card-header"><span class="r-card-icon">🎯</span><span class="r-card-title">Audience Intel</span></div>
+      <div class="r-card-body">
+        <div class="audience-grid">
+          <div class="audience-card"><div class="aud-label">Primary Buyer</div><div class="aud-text">${a.primary || '—'}</div></div>
+          <div class="audience-card"><div class="aud-label">Core Pain Point</div><div class="aud-text">${a.pain_point || '—'}</div></div>
+          <div class="audience-card"><div class="aud-label">#1 Scroll Hesitation</div><div class="aud-text">${a.hesitation || '—'}</div></div>
+          <div class="audience-card"><div class="aud-label">The Wow Moment</div><div class="aud-text">${a.wow_moment || '—'}</div></div>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Script angle
+  if (showScript && r.script_angle) {
+    html += `<div class="r-card">
+      <div class="r-card-header"><span class="r-card-icon">✍️</span><span class="r-card-title">Recommended Script Angle</span></div>
+      <div class="r-card-body">
+        <div style="font-size:0.875rem;line-height:1.7;color:var(--text);padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm);border-left:3px solid var(--col-scripts)">${r.script_angle}</div>
+        <button style="margin-top:12px;padding:9px 16px;background:rgba(242,196,206,0.15);color:var(--col-scripts);border:1px solid rgba(242,196,206,0.3);border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.8rem;font-weight:600;cursor:pointer;width:100%" onclick="goToScript('${(r.product_name||'').replace(/'/g,"\\'")}')">Use this angle in Script Generator →</button>
+      </div>
+    </div>`;
+  }
+
+  // Hook ideas — full width
+  if (showHooks && r.hook_ideas?.length) {
+    html += `<div class="r-card" style="grid-column:1/-1">
+      <div class="r-card-header"><span class="r-card-icon">🪝</span><span class="r-card-title">Hook Ideas</span></div>
+      <div class="r-card-body">
+        <div class="hook-suggestions">
+          ${r.hook_ideas.map(h => `
+          <div class="hook-sug" onclick="copyHookToBank('${h.type}','${(h.hook||'').replace(/'/g,"\\'").replace(/"/g,'&quot;')}','${(r.product_name||'').replace(/'/g,"\\'")}')">
+            <div class="hook-sug-type">${h.type}</div>
+            ${h.hook}
+            <div style="font-size:0.65rem;color:var(--col-hooks);margin-top:6px">Click to save to Hook Bank →</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // Compliance strip — full width
+  if (showCompliance && r.compliance_checks?.length) {
+    html += `<div class="compliance-strip">
+      <div class="comp-title">✅ Compliance Checklist</div>
+      <div class="comp-rules">
+        ${r.compliance_checks.map(c => `
+        <div class="comp-rule ${c.status === 'pass' ? 'pass' : 'fail'}">${c.rule}${c.note ? ' — ' + c.note : ''}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  html += `</div></div>`;
+
+  document.getElementById('rightCol').innerHTML = html;
+  window._currentReport = r;
+}
+
+// ── Save / load reports ───────────────────────────────────────────────
+function saveReport(r) {
+  const reports = JSON.parse(localStorage.getItem('hub_research_reports') || '[]');
+  reports.unshift({ product: r.product_name, brand: r.brand, timestamp: Date.now(), data: r });
+  localStorage.setItem('hub_research_reports', JSON.stringify(reports.slice(0, 15)));
+  renderSaved();
+}
+
+function renderSaved() {
+  const reports = JSON.parse(localStorage.getItem('hub_research_reports') || '[]');
+  const list = document.getElementById('savedList');
+  if (!reports.length) { list.innerHTML = '<div class="saved-empty">No saved reports yet.</div>'; return; }
+  list.innerHTML = reports.map((r,i) => `
+    <div class="saved-item" onclick="loadReport(${i})">
+      <div>
+        <div class="saved-name">${r.product}</div>
+        <div class="saved-date">${new Date(r.timestamp).toLocaleDateString()}</div>
+      </div>
+      <span style="font-size:0.7rem;color:var(--text-muted)">→</span>
+    </div>
+  `).join('');
+}
+
+function loadReport(i) {
+  const reports = JSON.parse(localStorage.getItem('hub_research_reports') || '[]');
+  if (reports[i]) renderResult(reports[i].data);
+}
+
+// ── Actions ───────────────────────────────────────────────────────────
+function copyReport() {
+  const r = window._currentReport;
+  if (!r) return;
+  const text = `PRODUCT RESEARCH: ${r.product_name}\n\nSUMMARY: ${r.one_line_summary}\n\nCLAIM ANGLES:\n${r.claim_angles?.map(c=>'• '+c.claim).join('\n')}\n\nHOOKS:\n${r.hook_ideas?.map(h=>'• ['+h.type+'] '+h.hook).join('\n')}\n\nSCRIPT ANGLE:\n${r.script_angle}`;
+  navigator.clipboard.writeText(text).then(() => showToast('Report copied to clipboard'));
+}
+
+function goToScript(name) {
+  localStorage.setItem('hub_prefill_product', name);
+  window.location.href = 'scripts.html';
+}
+
+function copyHookToBank(type, text, product) {
+  const hook = { id: 'local_' + Date.now(), type, text, product: product || 'general' };
+  const local = JSON.parse(localStorage.getItem('hub_hooks_local') || '[]');
+  local.unshift(hook); localStorage.setItem('hub_hooks_local', JSON.stringify(local));
+  showToast('Hook saved to Hook Bank!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+renderSaved();
+</script>
+</body>
+</html>

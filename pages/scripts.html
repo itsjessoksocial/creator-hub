@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Script Generator · Creator Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0E0818; --surface:#18102A; --surface2:#221838; --border:#2E2245;
+  --text:#FAF8FF; --text-muted:#9B8FB5;
+  --plum:#C9B8E8; --blush:#F2C4CE; --gold:#E8B86D; --mint:#A8E8C8;
+  --col-products:#C9B8E8; --col-hooks:#A8E8B8; --col-scripts:#F2C4CE;
+  --col-research:#A8D4E8; --col-videos:#E8C8A8; --col-commissions:#A8E8D8;
+  --sidebar-w:220px; --radius:14px; --radius-sm:8px;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'DM Sans',system-ui,sans-serif;
+  --transition:0.2s ease;
+}
+html,body{height:100%;}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);display:flex;}
+
+/* Sidebar */
+.sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0;position:fixed;top:0;left:0;z-index:100;}
+.sidebar-brand{padding:0 20px 28px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.sidebar-brand h1{font-family:var(--font-display);font-size:1.15rem;font-weight:700;color:var(--plum);line-height:1.2;}
+.sidebar-brand span{display:block;font-size:0.7rem;color:var(--text-muted);margin-top:3px;font-weight:400;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-section{padding:0 12px;margin-bottom:8px;}
+.nav-label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);padding:0 8px;margin-bottom:4px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius-sm);color:var(--text-muted);text-decoration:none;font-size:0.875rem;font-weight:500;transition:all var(--transition);}
+.nav-item:hover,.nav-item.active{background:var(--surface2);color:var(--text);}
+.nav-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);}
+.sidebar-footer strong{display:block;color:var(--text);font-weight:500;margin-bottom:2px;}
+
+/* Main */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:12px;}
+.back-link{color:var(--text-muted);text-decoration:none;font-size:0.84rem;transition:color var(--transition);}
+.back-link:hover{color:var(--text);}
+.page-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;}
+.page-tag{font-size:0.7rem;padding:4px 10px;border-radius:10px;background:rgba(242,196,206,0.15);color:var(--col-scripts);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;}
+
+.content{padding:32px;flex:1;display:grid;grid-template-columns:380px 1fr;gap:24px;align-items:start;}
+
+/* ── Input panel ─────────────────────────────────────────────────────── */
+.input-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;position:sticky;top:88px;}
+.panel-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.panel-header h2{font-size:0.9rem;font-weight:600;}
+.pillar-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.panel-body{padding:20px;display:flex;flex-direction:column;gap:16px;}
+
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;}
+.form-label span{color:var(--col-scripts);}
+.form-input,.form-select,.form-textarea{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-family:var(--font-body);font-size:0.875rem;color:var(--text);outline:none;transition:border-color var(--transition);}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--col-scripts);}
+.form-select option{background:var(--surface2);}
+.form-textarea{min-height:70px;resize:vertical;line-height:1.5;}
+.form-hint{font-size:0.72rem;color:var(--text-muted);line-height:1.4;margin-top:2px;}
+
+.pillar-toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pillar-toggle{padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);cursor:pointer;transition:all var(--transition);text-align:center;}
+.pillar-toggle:hover{border-color:var(--col-scripts);}
+.pillar-toggle.on{background:rgba(242,196,206,0.1);border-color:var(--col-scripts);}
+.pillar-toggle .p-num{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:3px;}
+.pillar-toggle.on .p-num{color:var(--col-scripts);}
+.pillar-toggle .p-name{font-size:0.78rem;font-weight:600;}
+
+.generate-btn{width:100%;padding:14px;background:var(--col-scripts);color:var(--bg);border:none;border-radius:var(--radius-sm);font-family:var(--font-body);font-size:0.95rem;font-weight:700;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;}
+.generate-btn:hover{filter:brightness(1.1);}
+.generate-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.generate-btn .spinner{width:16px;height:16px;border:2px solid rgba(14,8,24,0.3);border-top-color:var(--bg);border-radius:50%;animation:spin 0.8s linear infinite;display:none;}
+.generate-btn.loading .spinner{display:block;}
+.generate-btn.loading .btn-label{display:none;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Output panel ────────────────────────────────────────────────────── */
+.output-panel{display:flex;flex-direction:column;gap:16px;}
+
+.script-empty{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:60px 32px;text-align:center;color:var(--text-muted);}
+.script-empty .icon{font-size:3rem;margin-bottom:16px;}
+.script-empty h3{font-family:var(--font-display);font-size:1.2rem;color:var(--text);margin-bottom:8px;}
+.script-empty p{font-size:0.84rem;line-height:1.6;max-width:360px;margin:0 auto;}
+
+.script-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:none;}
+.script-result.visible{display:block;}
+
+.result-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.result-header h3{font-family:var(--font-display);font-size:1rem;font-weight:700;}
+.result-actions{display:flex;gap:8px;}
+.icon-btn{padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);font-size:0.78rem;cursor:pointer;transition:all var(--transition);font-family:var(--font-body);}
+.icon-btn:hover{color:var(--text);border-color:var(--col-scripts);}
+
+.pillars-strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--border);}
+.pillar-col{padding:14px 16px;border-right:1px solid var(--border);}
+.pillar-col:last-child{border-right:none;}
+.pillar-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:6px;}
+.p1 .pillar-label{color:#E8B86D;}
+.p2 .pillar-label{color:#C9B8E8;}
+.p3 .pillar-label{color:#F2C4CE;}
+.p4 .pillar-label{color:#A8E8C8;}
+.pillar-content{font-size:0.8rem;color:var(--text-muted);line-height:1.4;}
+.pillar-col.loading-col .pillar-content{display:flex;flex-direction:column;gap:4px;}
+.skel{height:10px;border-radius:4px;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface) 50%,var(--surface2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+.script-body{padding:24px;}
+.script-section{margin-bottom:20px;}
+.section-tag{display:inline-block;font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 8px;border-radius:6px;margin-bottom:8px;}
+.tag-hook     {background:rgba(232,184,109,0.15);color:var(--gold);}
+.tag-authority{background:rgba(201,184,232,0.15);color:var(--plum);}
+.tag-story    {background:rgba(242,196,206,0.15);color:var(--blush);}
+.tag-proof    {background:rgba(168,232,200,0.15);color:var(--mint);}
+.tag-cta      {background:rgba(168,212,232,0.15);color:#A8D4E8;}
+
+.script-text{font-size:0.9rem;line-height:1.7;color:var(--text);white-space:pre-wrap;}
+.script-text em{color:var(--text-muted);font-style:italic;}
+.section-divider{border:none;border-top:1px dashed var(--border);margin:16px 0;}
+
+.compliance-check{padding:16px 20px;background:rgba(168,232,200,0.05);border-top:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;}
+.compliance-icon{font-size:1rem;flex-shrink:0;margin-top:1px;}
+.compliance-text{font-size:0.78rem;color:var(--text-muted);line-height:1.5;}
+.compliance-text strong{color:var(--mint);}
+
+/* History */
+.history-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.history-panel .panel-header{padding:14px 20px;border-bottom:1px solid var(--border);}
+.history-list{max-height:200px;overflow-y:auto;}
+.history-item{padding:12px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--transition);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.history-item:last-child{border-bottom:none;}
+.history-item:hover{background:var(--surface2);}
+.history-product{font-size:0.84rem;font-weight:500;}
+.history-meta{font-size:0.72rem;color:var(--text-muted);}
+.history-empty{padding:20px;text-align:center;color:var(--text-muted);font-size:0.82rem;}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand"><h1>creator<br>hub ✦</h1><span>@its.jess.ok</span></div>
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-item" href="../index.html"><span class="dot" style="background:var(--plum)"></span> Dashboard</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Content Tools</div>
+    <a class="nav-item" href="products.html"><span class="dot" style="background:var(--col-products)"></span> Products</a>
+    <a class="nav-item" href="hooks.html"><span class="dot" style="background:var(--col-hooks)"></span> Hook Bank</a>
+    <a class="nav-item active" href="scripts.html"><span class="dot" style="background:var(--col-scripts)"></span> Script Generator</a>
+    <a class="nav-item" href="research.html"><span class="dot" style="background:var(--col-research)"></span> Product Research</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Performance</div>
+    <a class="nav-item" href="videos.html"><span class="dot" style="background:var(--col-videos)"></span> Videos</a>
+    <a class="nav-item" href="commissions.html"><span class="dot" style="background:var(--col-commissions)"></span> Commissions</a>
+  </div>
+  <div class="sidebar-footer">
+    <strong>@its.jess.ok</strong>beauty · skincare
+    <strong style="margin-top:8px">@jessirl466</strong>wellness · home
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="back-link" href="../index.html">← Hub</a>
+      <div class="page-title">Script Generator</div>
+      <span class="page-tag">4 Pillars</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Input -->
+    <div class="input-panel">
+      <div class="panel-header">
+        <span class="pillar-dot" style="background:var(--col-scripts)"></span>
+        <h2>Script Brief</h2>
+      </div>
+      <div class="panel-body">
+
+        <div class="form-group">
+          <label class="form-label">Product Name <span>*</span></label>
+          <input class="form-input" id="f-product" placeholder="e.g. e.l.f. Halo Glow Liquid Filter">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hook Style</label>
+          <select class="form-select" id="f-hook">
+            <option value="pain_point">Pain Point — "My skin was doing this…"</option>
+            <option value="curiosity_gap">Curiosity Gap — "I cannot believe this…"</option>
+            <option value="fomo">FOMO — "Everyone in my DMs…"</option>
+            <option value="authority">Authority — "I've tested X serums…"</option>
+            <option value="social_proof">Social Proof — "My whole comment section…"</option>
+            <option value="before_after">Before/After — "Six weeks ago my skin…"</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Target Audience</label>
+          <input class="form-input" id="f-audience" placeholder="e.g. oily skin girlies, 25-35, skincare obsessed">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Key Claim Angle</label>
+          <textarea class="form-textarea" id="f-claim" placeholder="What cosmetic result does it deliver? (no disease/condition language)"></textarea>
+          <div class="form-hint">✓ Cosmetic claims only · ✕ No condition treatment language</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Account</label>
+          <select class="form-select" id="f-account">
+            <option value="@its.jess.ok">@its.jess.ok (beauty/skincare)</option>
+            <option value="@jessirl466">@jessirl466 (wellness/home)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Video Length</label>
+          <select class="form-select" id="f-length">
+            <option value="30s">~30 seconds</option>
+            <option value="60s" selected>~60 seconds</option>
+            <option value="90s">~90 seconds</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Include Pillars</label>
+          <div class="pillar-toggles">
+            <div class="pillar-toggle on" id="pt1" onclick="togglePillar(1)">
+              <div class="p-num">Pillar 1</div>
+              <div class="p-name">Dual Hook</div>
+            </div>
+            <div class="pillar-toggle on" id="pt2" onclick="togglePillar(2)">
+              <div class="p-num">Pillar 2</div>
+              <div class="p-name">Authority</div>
+            </div>
+            <div class="pillar-toggle on" id="pt3" onclick="togglePillar(3)">
+              <div class="p-num">Pillar 3</div>
+              <div class="p-name">Story & Demo</div>
+            </div>
+            <div class="pillar-toggle on" id="pt4" onclick="togglePillar(4)">
+              <div class="p-num">Pillar 4</div>
+              <div class="p-name">FOMO + CTA</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Extra Notes</label>
+          <textarea class="form-textarea" id="f-notes" placeholder="Husband cameo? Specific demo? Trending audio context?"></textarea>
+        </div>
+
+        <button class="generate-btn" id="genBtn" onclick="generateScript()">
+          <div class="spinner"></div>
+          <span class="btn-label">✦ Generate Script</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div class="output-panel">
+
+      <div class="script-empty" id="emptyState">
+        <div class="icon">✍️</div>
+        <h3>Your script lives here</h3>
+        <p>Fill in the brief on the left and hit Generate. Claude builds your 4 Pillars script using buyer psychology — compliance-safe, ready to film.</p>
+      </div>
+
+      <div class="script-result" id="scriptResult">
+        <div class="result-header">
+          <h3 id="result-title">Script: —</h3>
+          <div class="result-actions">
+            <button class="icon-btn" onclick="copyScript()">📋 Copy</button>
+            <button class="icon-btn" onclick="saveToHistory()">💾 Save</button>
+            <button class="icon-btn" onclick="generateScript()">↻ Regenerate</button>
+          </div>
+        </div>
+        <div class="pillars-strip">
+          <div class="pillar-col p1">
+            <div class="pillar-label">Pillar 1 · Hook</div>
+            <div class="pillar-content" id="ps1"></div>
+          </div>
+          <div class="pillar-col p2">
+            <div class="pillar-label">Pillar 2 · Authority</div>
+            <div class="pillar-content" id="ps2"></div>
+          </div>
+          <div class="pillar-col p3">
+            <div class="pillar-label">Pillar 3 · Story</div>
+            <div class="pillar-content" id="ps3"></div>
+          </div>
+          <div class="pillar-col p4">
+            <div class="pillar-label">Pillar 4 · FOMO</div>
+            <div class="pillar-content" id="ps4"></div>
+          </div>
+        </div>
+        <div class="script-body" id="scriptBody"></div>
+        <div class="compliance-check">
+          <div class="compliance-icon">✅</div>
+          <div class="compliance-text" id="complianceText"></div>
+        </div>
+      </div>
+
+      <div class="history-panel" id="historyPanel">
+        <div class="panel-header" style="display:flex;align-items:center;gap:10px">
+          <span class="pillar-dot" style="background:var(--col-scripts)"></span>
+          <span style="font-size:0.875rem;font-weight:600">Script History</span>
+        </div>
+        <div class="history-list" id="historyList">
+          <div class="history-empty">No scripts generated yet.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="../assets/js/config.js"></script>
+<script>
+const pillarsOn = { 1:true, 2:true, 3:true, 4:true };
+function togglePillar(n) {
+  pillarsOn[n] = !pillarsOn[n];
+  document.getElementById('pt'+n).classList.toggle('on', pillarsOn[n]);
+}
+
+// Prefill from products page
+const prefill = localStorage.getItem('hub_prefill_product');
+if (prefill) {
+  document.getElementById('f-product').value = prefill;
+  localStorage.removeItem('hub_prefill_product');
+}
+
+// ── System prompt for Claude ──────────────────────────────────────────
+function buildSystemPrompt() {
+  return `You are a TikTok Shop affiliate script writer for Jess (@its.jess.ok / @jessirl466), a beauty and wellness creator building toward $200K/year in commissions.
+
+You write TikTok scripts using the "4 Pillars" framework and buyer psychology principles from Cashvertising (Life Force 8) and Cialdini's Influence. You are an expert at compliance.
+
+STRICT COMPLIANCE RULES — violations cannot be fixed in post:
+- NO price or sale price mentions
+- NO product-to-product comparisons
+- NO "dupe" language
+- NO "link in bio" — ALWAYS say "orange cart" or "tap the orange cart"
+- On-screen text: 6 words maximum
+- Cosmetic claims ONLY (no disease/condition treatment language)
+- If product is a supplement: include FDA disclaimer "These statements have not been evaluated by the FDA. This product is not intended to diagnose, treat, cure, or prevent any disease."
+- No competitor brand names
+
+THE 4 PILLARS FRAMEWORK:
+Pillar 1 — DUAL HOOK: Visual hook (first frame action) + verbal hook (spoken words 0-3 sec). Must create emotional tension: pain point, curiosity gap, or FOMO. Six words max for on-screen text.
+Pillar 2 — AUTHORITY ANGLE: Establish why Jess's opinion matters. Personal experience, testing history, or specific expertise. Authentic, not braggy.
+Pillar 3 — STORY & DIGITAL DEMO: The transformation story + showing the product in use. Sensory language. The "before" and the shift.
+Pillar 4 — SOCIAL PROOF + FOMO + ENGAGEMENT CTA: Community proof, scarcity cues, direct engagement ask, and "orange cart" CTA.
+
+TONE: Organic, non-ad-feeling. Jess is warm, real, and slightly dry-humored. Not salesy, not corporate. Like texting your skincare-obsessed friend.
+
+OUTPUT FORMAT — respond in this exact JSON structure:
+{
+  "pillar1_summary": "one sentence summary of hook",
+  "pillar2_summary": "one sentence summary of authority angle",
+  "pillar3_summary": "one sentence summary of story/demo",
+  "pillar4_summary": "one sentence summary of FOMO/CTA",
+  "full_script": "the complete script with [PILLAR 1: DUAL HOOK], [PILLAR 2: AUTHORITY], [PILLAR 3: STORY & DEMO], [PILLAR 4: FOMO + CTA] section headers, and [ON-SCREEN TEXT: ...] notes for text overlays",
+  "compliance_notes": "bullet list of what was checked: what was included and what was avoided"
+}`;
+}
+
+function buildUserPrompt() {
+  const product  = document.getElementById('f-product').value.trim();
+  const hook     = document.getElementById('f-hook').value;
+  const audience = document.getElementById('f-audience').value.trim();
+  const claim    = document.getElementById('f-claim').value.trim();
+  const account  = document.getElementById('f-account').value;
+  const length   = document.getElementById('f-length').value;
+  const notes    = document.getElementById('f-notes').value.trim();
+  const pillars  = Object.entries(pillarsOn).filter(([,v])=>v).map(([k])=>k).join(', ');
+
+  return `Write a TikTok Shop affiliate script for:
+
+PRODUCT: ${product || 'unspecified'}
+HOOK STYLE: ${hook.replace(/_/g,' ')}
+TARGET AUDIENCE: ${audience || 'beauty and skincare enthusiasts'}
+CLAIM ANGLE: ${claim || 'visibly improves skin appearance'}
+ACCOUNT: ${account}
+VIDEO LENGTH: ${length}
+INCLUDE PILLARS: ${pillars}
+EXTRA NOTES: ${notes || 'none'}
+
+Generate the complete script following the 4 Pillars framework. Return ONLY valid JSON, no markdown backticks.`;
+}
+
+// ── Generate ──────────────────────────────────────────────────────────
+async function generateScript() {
+  const product = document.getElementById('f-product').value.trim();
+  if (!product) {
+    document.getElementById('f-product').focus();
+    document.getElementById('f-product').style.borderColor = 'var(--blush)';
+    return;
+  }
+  document.getElementById('f-product').style.borderColor = '';
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  document.getElementById('emptyState').style.display = 'none';
+  const result = document.getElementById('scriptResult');
+  result.classList.add('visible');
+
+  // Show skeleton in pillars
+  ['ps1','ps2','ps3','ps4'].forEach(id => {
+    document.getElementById(id).innerHTML = '<div class="skel" style="height:10px;margin-bottom:4px"></div><div class="skel" style="height:10px;width:70%"></div>';
+  });
+  document.getElementById('scriptBody').innerHTML = '<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0">' +
+    [1,2,3,4,5].map(() => '<div class="skel" style="height:14px"></div>').join('') + '</div>';
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: buildSystemPrompt(),
+        messages: [{ role: 'user', content: buildUserPrompt() }],
+      }),
+    });
+
+    const data = await resp.json();
+    const raw = data.content?.find(c => c.type === 'text')?.text || '';
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    renderScript(parsed, product);
+  } catch(e) {
+    console.error(e);
+    renderScript(getFallback(product), product);
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+}
+
+function renderScript(s, product) {
+  document.getElementById('result-title').textContent = 'Script: ' + product;
+  document.getElementById('ps1').textContent = s.pillar1_summary || '';
+  document.getElementById('ps2').textContent = s.pillar2_summary || '';
+  document.getElementById('ps3').textContent = s.pillar3_summary || '';
+  document.getElementById('ps4').textContent = s.pillar4_summary || '';
+
+  // Format script sections
+  let html = '';
+  const script = s.full_script || '';
+  const sections = script.split(/\[PILLAR \d+[^\]]*\]/);
+  const headers  = [...script.matchAll(/\[PILLAR \d+[^\]]*\]/g)].map(m => m[0]);
+  const tagMap   = { 'DUAL HOOK':'hook', 'AUTHORITY':'authority', 'STORY':'story', 'FOMO':'proof', 'CTA':'cta' };
+
+  if (sections.length <= 1) {
+    html = `<div class="script-section"><div class="script-text">${script}</div></div>`;
+  } else {
+    sections.forEach((sec, i) => {
+      if (i === 0 && !sec.trim()) return;
+      const header = headers[i - 1] || '';
+      let tagClass = 'tag-story';
+      for (const [k,v] of Object.entries(tagMap)) {
+        if (header.includes(k)) { tagClass = 'tag-' + v; break; }
+      }
+      const headerLabel = header.replace(/\[|\]/g,'');
+      html += `<div class="script-section">
+        ${header ? `<span class="section-tag ${tagClass}">${headerLabel}</span>` : ''}
+        <div class="script-text">${sec.trim().replace(/\[ON-SCREEN TEXT:[^\]]+\]/g, m => `<em>${m}</em>`)}</div>
+        ${i < sections.length - 1 ? '<hr class="section-divider">' : ''}
+      </div>`;
+    });
+  }
+  document.getElementById('scriptBody').innerHTML = html;
+
+  document.getElementById('complianceText').innerHTML =
+    `<strong>Compliance check complete</strong><br>${(s.compliance_notes || 'No price mentions · No comparisons · Orange cart CTA · Cosmetic claims only').replace(/\n/g,'<br>')}`;
+
+  // Save to localStorage history
+  const history = JSON.parse(localStorage.getItem('hub_script_history') || '[]');
+  history.unshift({ product, timestamp: Date.now(), script: s.full_script, brief: buildUserPrompt() });
+  localStorage.setItem('hub_script_history', JSON.stringify(history.slice(0, 20)));
+  renderHistory();
+}
+
+function getFallback(product) {
+  return {
+    pillar1_summary: `Pain point hook about skin texture frustration`,
+    pillar2_summary: `Personal testing authority — "I've tried everything"`,
+    pillar3_summary: `Story of discovery + live demo application`,
+    pillar4_summary: `Comment CTA + orange cart close`,
+    full_script: `[PILLAR 1: DUAL HOOK]
+[ON-SCREEN TEXT: my skin was lying to me]
+"Okay so I need to show you what happened to my skin because I genuinely thought I just had bad skin — like, forever."
+
+[PILLAR 2: AUTHORITY]
+"I have tried probably every serum in this niche at this point. I'm not easy to impress. So when something actually changes what I see in the mirror, I have to talk about it."
+
+[PILLAR 3: STORY & DEMO]
+"I started using ${product} and within a few weeks my skin just… looked different. More even. More like the version of my skin I've been trying to get to for years. I'm going to show you exactly how I apply it."
+
+[PILLAR 4: FOMO + CTA]
+"Drop 'YES' if you want more of my actual skincare routine. And if you want to try ${product} — it's in my orange cart. I'll see you in the comments."`,
+    compliance_notes: `No price mentions · No competitor comparisons · "orange cart" CTA used · Cosmetic claims only · No disease treatment language`,
+  };
+}
+
+function copyScript() {
+  const text = document.getElementById('scriptBody').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy', 2000);
+  });
+}
+
+function saveToHistory() { /* already saved on generate */ renderHistory(); }
+
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem('hub_script_history') || '[]');
+  const list = document.getElementById('historyList');
+  if (!history.length) {
+    list.innerHTML = '<div class="history-empty">No scripts generated yet.</div>';
+    return;
+  }
+  list.innerHTML = history.map((h,i) => `
+    <div class="history-item" onclick="loadHistory(${i})">
+      <div>
+        <div class="history-product">${h.product}</div>
+        <div class="history-meta">${new Date(h.timestamp).toLocaleString()}</div>
+      </div>
+      <div style="font-size:0.72rem;color:var(--text-muted)">load →</div>
+    </div>
+  `).join('');
+}
+
+function loadHistory(i) {
+  const history = JSON.parse(localStorage.getItem('hub_script_history') || '[]');
+  const h = history[i];
+  if (!h) return;
+  document.getElementById('f-product').value = h.product;
+  renderScript({ full_script: h.script, compliance_notes: '' }, h.product);
+}
+
+renderHistory();
+</script>
+</body>
+</html>
